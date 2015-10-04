@@ -20,7 +20,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initStartGameButton() {
-
+        Button startButton = (Button)findViewById(R.id.start_game_button);
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent startGameIntent = new Intent(MainActivity.this, GameActivity.class);
+                startActivity(startGameIntent);
+            }
+        });
     }
 
     private void initHighScoresButton() {
