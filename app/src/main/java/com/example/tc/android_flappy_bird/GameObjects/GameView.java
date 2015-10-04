@@ -16,6 +16,7 @@ public class GameView extends View {
 
     private Paint paint;
     private Bitmap birdBitMap;
+    private Bitmap backGroundBitMap;
 
     private Bird playerBird;
 
@@ -30,6 +31,8 @@ public class GameView extends View {
         this.playerBird = new Bird();
         this.birdBitMap = BitmapFactory.decodeResource(getResources(),
                 R.drawable.bird);
+        this.backGroundBitMap = BitmapFactory.decodeResource(getResources(),
+                R.drawable.background);
     }
 
     // called on initial startup
@@ -49,9 +52,15 @@ public class GameView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        drawBackground(canvas);
         playerBird.drawSelf(canvas, birdBitMap, paint);
         updatePositions();
         invalidate();
+    }
+
+    private void drawBackground(Canvas canvas) {
+        RectF backgroundRect = new RectF(0, 0, screenWidth, screenHeight);
+        canvas.drawBitmap(backGroundBitMap, null, backgroundRect, paint);
     }
 
     private void updatePositions() {
