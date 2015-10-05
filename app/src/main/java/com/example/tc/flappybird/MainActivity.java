@@ -1,4 +1,4 @@
-package com.example.tc.android_flappy_bird;
+package com.example.tc.flappybird;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+
+import com.example.tc.android_flappy_bird.R;
 
 public class MainActivity extends AppCompatActivity {
 

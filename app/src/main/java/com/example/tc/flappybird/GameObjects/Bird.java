@@ -1,4 +1,4 @@
-package com.example.tc.android_flappy_bird.GameObjects;
+package com.example.tc.flappybird.GameObjects;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,7 +9,7 @@ import android.graphics.RectF;
 public class Bird {
 
     private final int OFFSET = 40;
-    private final float X_VELOCITY = 200;
+    private final int STARTING_HEIGHT = 100;
     private final int SIZE_HEIGHT = 70;
     private final int SIZE_WIDTH = 100;
 
@@ -21,7 +21,7 @@ public class Bird {
 
 
     public Bird() {
-        this.yPosition = 100;
+        this.yPosition = STARTING_HEIGHT;
         this.yVelocity = 0;
     }
 
@@ -35,8 +35,8 @@ public class Bird {
         canvas.drawBitmap(bitmap, null, hitbox, paint);
     }
 
-    public void updatePosition(float time, int gravity) {
-        xPosition = xPosition + X_VELOCITY * time;
+    public void updatePosition(float time, int gravity, int xVelocity) {
+        xPosition = xPosition + xVelocity * time;
         yVelocity = yVelocity + gravity * time;
         yPosition = yPosition + yVelocity * time;
     }
