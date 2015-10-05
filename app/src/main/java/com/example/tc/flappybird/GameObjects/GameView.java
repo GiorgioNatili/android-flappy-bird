@@ -13,13 +13,18 @@ import android.view.View;
 
 import com.example.tc.android_flappy_bird.R;
 
-import java.util.Queue;
+import java.util.LinkedList;
+
 
 public class GameView extends View {
 
     private final int GRAVITY = 2000;
     private final int X_VELOCITY = 200;
     private final int X_DIST_BETWEEN_PIPES = 500; // five pipe widths
+
+    private final int PIPE_DEATH_POS = -100;
+    private int pipeBirthPos;
+
 
     private Paint paint;
     private Bitmap birdBitMap;
@@ -29,7 +34,7 @@ public class GameView extends View {
 
     private Bird playerBird;
     private PipePair testPair;
-    private Queue<PipePair> pipePairsOnScreen;
+    private LinkedList<PipePair> pipePairsOnScreen;
 
     private int screenHeight;
     private int screenWidth;
@@ -46,7 +51,6 @@ public class GameView extends View {
         this.screenWidth = displaymetrics.widthPixels;
         this.paint = new Paint();
         this.playerBird = new Bird();
-        this.testPair = new PipePair((int)(screenWidth * 1.5), 200);
         this.birdBitMap = BitmapFactory.decodeResource(getResources(),
                 R.drawable.bird);
         this.backgroundBitMap = BitmapFactory.decodeResource(getResources(),
@@ -55,6 +59,7 @@ public class GameView extends View {
                 R.drawable.obstacle_top);
         this.botPipeBitMap = BitmapFactory.decodeResource(getResources(),
                 R.drawable.obstacle_bottom);
+        resetGameState();
     }
 
     // called on initial startup
@@ -70,6 +75,10 @@ public class GameView extends View {
         lastFrame = -1;
         score = 0;
         playerBird.resetState();
+        pipeBirthPos = (int)(screenWidth * 1.2);
+        pipePairsOnScreen = new LinkedList<PipePair>();
+        PipePair firstPipes = new PipePair(pipeBirthPos, 200);
+        pipePairsOnScreen.add(firstPipes);
     }
 
     @Override
@@ -88,10 +97,9 @@ public class GameView extends View {
     }
 
     private void drawPipes(Canvas canvas) {
-        testPair.drawSelf(canvas, topPipeBitMap, botPipeBitMap, screenHeight, paint);
-        //for (PipePair pipePair : pipePairsOnScreen) {
-        //    pipePair.drawSelf(canvas);
-        //}
+        for (PipePair pipePair : pipePairsOnScreen) {
+            pipePair.drawSelf(canvas, topPipeBitMap, botPipeBitMap, screenHeight, paint);
+        }
     }
 
     private void updatePositions() {
@@ -99,9 +107,24 @@ public class GameView extends View {
         if (lastFrame != -1) {
             float time = (currentTime - lastFrame) / 1000f; // divide by 1000 to convert to seconds
             playerBird.updatePosition(time, GRAVITY, X_VELOCITY);
-            testPair.updatePosition(time, X_VELOCITY);
+            updatePipesOnScreen(time);
         }
         lastFrame = currentTime;
+    }
+
+
+    private void updatePipesOnScreen(float time) {
+        for (int i = 0; i < pipePairsOnScreen.size(); i++) {
+            PipePair pointer = pipePairsOnScreen.get(i);
+            pointer.updatePosition(time, X_VELOCITY);
+            if (!pointer.getBirthed() && (int)pointer.getDistanceTraveled() > X_DIST_BETWEEN_PIPES) {
+                pipePairsOnScreen.add(new PipePair(pipeBirthPos, 200));
+                pointer.setBirthed(true);
+            }
+            if (pipePairsOnScreen.peek().getXPos() < PIPE_DEATH_POS) {
+                pipePairsOnScreen.remove();
+            }
+        }
     }
 
     @Override

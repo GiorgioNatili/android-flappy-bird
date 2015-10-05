@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/android-flappy-bird.iml" filepath="$PROJECT_DIR$/android-flappy-bird.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/flappybird.iml" filepath="$PROJECT_DIR$/flappybird.iml" />
     </modules>
   </component>
 </project>
