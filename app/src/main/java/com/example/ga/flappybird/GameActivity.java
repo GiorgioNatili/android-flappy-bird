@@ -1,4 +1,4 @@
-package com.example.tc.flappybird;
+package com.example.ga.flappybird;
 
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -7,7 +7,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import com.example.tc.flappybird.GameObjects.GameView;
+import com.example.ga.flappybird.views.GameView;
 
 public class GameActivity extends AppCompatActivity {
 
