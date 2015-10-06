@@ -1,7 +1,9 @@
 package com.example.ga.flappybird.views;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -49,6 +51,8 @@ public class GameView extends View {
     private int screenWidth;
 
     private long lastFrame = -1;
+
+    private boolean isPaused = false;
 
     private int score = 0;
 
@@ -116,13 +120,18 @@ public class GameView extends View {
 
         super.onDraw(canvas);
 
-        updatePositions();
+
 
         drawBackground(canvas);
         bird.drawSelf(canvas, birdBitMap, paint);
         drawPipes(canvas);
 
-        checkCollisions();
+        if (!isPaused) {
+
+            updatePositions();
+            checkCollisions();
+
+        }
 
         invalidate();
 
@@ -201,12 +210,35 @@ public class GameView extends View {
                 gameOver();
 
             }
-
         }
     }
 
     private void gameOver() {
-        resetGameState();
+        isPaused = true;
+        showScoreDialog();
+
+    }
+
+    private void showScoreDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+        builder.setMessage("Your score was: " + score).setTitle(
+                "Game over!");
+
+        builder.setPositiveButton("Play Again",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        isPaused = false;
+                        resetGameState();
+                        dialog.dismiss();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+
     }
 
     @Override
