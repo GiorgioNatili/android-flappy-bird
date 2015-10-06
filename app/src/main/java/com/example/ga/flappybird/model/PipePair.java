@@ -13,14 +13,14 @@ public class PipePair {
     private final int INIT_X_POS;
 
     private int pipeStartingPosition; // measured from the top, we randomize this for level design
-    private float x;
-    private float distanceTraveled = 0;
-    private boolean nextPipeCreated = false;
+    private float mXPos;
+    private float mDistanceTraveled = 0;
+    private boolean mNextPipeCreated = false;
 
-    public PipePair(int initXPos, int initialY) {
+    public PipePair(int initalXPos, int initialY) {
 
-        this.INIT_X_POS = initXPos;
-        this.x = INIT_X_POS;
+        this.INIT_X_POS = initalXPos;
+        this.mXPos = INIT_X_POS;
         this.pipeStartingPosition = initialY;
 
     }
@@ -28,10 +28,10 @@ public class PipePair {
     public void drawSelf(Canvas canvas, Bitmap topBitmap,
                          Bitmap bottomBitmap, int screenHeight, Paint paint) {
 
-        float pipeRight = x + WIDTH;
+        float pipeRight = mXPos + WIDTH;
 
-        RectF top       = new RectF(x, 0, pipeRight, pipeStartingPosition);
-        RectF bottom    = new RectF(x, pipeStartingPosition + PIPE_OPENING_SIZE, pipeRight, screenHeight);
+        RectF top       = new RectF(mXPos, 0, pipeRight, pipeStartingPosition);
+        RectF bottom    = new RectF(mXPos, pipeStartingPosition + PIPE_OPENING_SIZE, pipeRight, screenHeight);
 
         canvas.drawBitmap(topBitmap, null, top, paint);
         canvas.drawBitmap(bottomBitmap, null, bottom, paint);
@@ -40,32 +40,32 @@ public class PipePair {
 
     public void updatePosition(float time, int xVelocity) {
 
-        x = x - xVelocity * time;
-        distanceTraveled = Math.abs(x - INIT_X_POS);
+        mXPos = mXPos - xVelocity * time;
+        mDistanceTraveled = Math.abs(mXPos - INIT_X_POS);
 
     }
 
     public float getXPos() {
 
-        return this.x;
+        return this.mXPos;
 
     }
 
     public float getDistanceTraveled() {
 
-        return this.distanceTraveled;
+        return this.mDistanceTraveled;
 
     }
 
     public void setNextPipeCreated(boolean update) {
 
-        nextPipeCreated = update;
+        mNextPipeCreated = update;
 
     }
 
     public boolean getNextPipeCreated() {
 
-        return this.nextPipeCreated;
+        return this.mNextPipeCreated;
 
     }
 }

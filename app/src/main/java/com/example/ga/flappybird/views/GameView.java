@@ -176,7 +176,7 @@ public class GameView extends View {
 
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
 
-            bird.setYVelocity(-800);
+            bird.setVerticalSpeed(-800);
 
         }
 
