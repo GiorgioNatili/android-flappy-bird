@@ -105,7 +105,7 @@ public class GameView extends View {
         pipePairs = new LinkedList<PipePair>();
 
         int startingHeight = random.nextInt(upperBound);
-        PipePair firstPipes = new PipePair(pipeStartingPosition, startingHeight);
+        PipePair firstPipes = new PipePair(pipeStartingPosition, startingHeight, screenHeight);
         pipePairs.add(firstPipes);
 
     }
@@ -115,11 +115,13 @@ public class GameView extends View {
 
         super.onDraw(canvas);
 
+        updatePositions();
+
         drawBackground(canvas);
         bird.drawSelf(canvas, birdBitMap, paint);
-
         drawPipes(canvas);
-        updatePositions();
+
+        checkCollisions();
 
         invalidate();
 
@@ -135,7 +137,7 @@ public class GameView extends View {
 
         for (PipePair pipePair : pipePairs) {
 
-            pipePair.drawSelf(canvas, topPipeBitMap, botPipeBitMap, screenHeight, paint);
+            pipePair.drawSelf(canvas, topPipeBitMap, botPipeBitMap, paint);
 
         }
 
@@ -167,7 +169,7 @@ public class GameView extends View {
             if (!pointer.getNextPipeCreated() && (int)pointer.getDistanceTraveled() > X_DIST_BETWEEN_PIPES) {
 
                 int randomHeight = random.nextInt(upperBound);
-                pipePairs.add(new PipePair(pipeStartingPosition, randomHeight));
+                pipePairs.add(new PipePair(pipeStartingPosition, randomHeight, screenHeight));
                 pointer.setNextPipeCreated(true);
 
             }
@@ -178,6 +180,10 @@ public class GameView extends View {
 
             }
         }
+    }
+
+    private void checkCollisions() {
+
     }
 
     @Override

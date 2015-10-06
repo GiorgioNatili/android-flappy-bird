@@ -58,4 +58,8 @@ public class Bird {
         this.mVerticalVelocity = 0;
 
     }
+
+    public RectF getHitbox() {
+        return this.hitbox;
+    }
 }

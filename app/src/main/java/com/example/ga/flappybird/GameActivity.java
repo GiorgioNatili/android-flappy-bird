@@ -18,6 +18,7 @@ public class GameActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         makeAppFullScreen();
+
         GameView gameView = new GameView(this);
         FrameLayout frameLayout = new FrameLayout(this);
         frameLayout.setLayoutParams(new ViewPager.LayoutParams());
