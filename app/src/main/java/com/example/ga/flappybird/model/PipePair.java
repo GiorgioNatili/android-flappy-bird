@@ -13,14 +13,17 @@ public class PipePair {
     private final int INIT_X_POS;
 
     private int mPipeHeight; // measured from the top, we randomize this for level design
+    private float mPipeRight;
     private float mXPos;
     private float mDistanceTraveled = 0;
     private boolean mNextPipeCreated = false;
+    private boolean isPassed = false;
 
     private RectF mTopHitbox;
     private RectF mBotHitbox;
 
     private int screenHeight;
+
 
     public PipePair(int initialX, int initialY, int screenHeight) {
 
@@ -29,10 +32,10 @@ public class PipePair {
         this.mPipeHeight = initialY;
         this.screenHeight = screenHeight;
 
-        float initPipeRight = INIT_X_POS + PIPE_WIDTH;
-        mTopHitbox = new RectF(INIT_X_POS, 0, initPipeRight, mPipeHeight);
+        mPipeRight = INIT_X_POS + PIPE_WIDTH;
+        mTopHitbox = new RectF(INIT_X_POS, 0, mPipeRight, mPipeHeight);
         mBotHitbox = new RectF(INIT_X_POS, mPipeHeight + PIPE_OPENING_SIZE,
-                initPipeRight, screenHeight);
+                mPipeRight, screenHeight);
 
     }
 
@@ -54,10 +57,10 @@ public class PipePair {
 
     private void updateHitBoxes() {
 
-        float pipeRight = mXPos + PIPE_WIDTH;
-        mTopHitbox.set(mXPos, 0, pipeRight, mPipeHeight);
+        mPipeRight = mXPos + PIPE_WIDTH;
+        mTopHitbox.set(mXPos, 0, mPipeRight, mPipeHeight);
         mBotHitbox.set(mXPos, mPipeHeight + PIPE_OPENING_SIZE,
-                pipeRight, screenHeight);
+                mPipeRight, screenHeight);
 
     }
 
@@ -107,5 +110,17 @@ public class PipePair {
 
         return this.mBotHitbox;
 
+    }
+
+    public float getPipeRight() {
+        return this.mPipeRight;
+    }
+
+    public boolean isPassed() {
+        return isPassed;
+    }
+
+    public void setPassed(boolean update) {
+        this.isPassed = update;
     }
 }

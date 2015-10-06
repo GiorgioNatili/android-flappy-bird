@@ -70,4 +70,9 @@ public class Bird {
         return this.y;
 
     }
+
+    public int getOffSet() {
+
+        return this.OFFSET;
+    }
 }

@@ -7,8 +7,8 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -125,6 +125,7 @@ public class GameView extends View {
         drawBackground(canvas);
         bird.drawSelf(canvas, birdBitMap, paint);
         drawPipes(canvas);
+        drawScore(canvas);
 
         if (!isPaused) {
 
@@ -153,6 +154,14 @@ public class GameView extends View {
 
     }
 
+    private void drawScore(Canvas canvas) {
+
+        paint.setColor(Color.YELLOW);
+        paint.setTextSize(100);
+        canvas.drawText("" + score, 100, 100, paint);
+
+    }
+
     private void updatePositions() {
 
         long currentTime = System.currentTimeMillis();
@@ -175,6 +184,12 @@ public class GameView extends View {
 
             PipePair pointer = pipePairsOnScreen.get(i);
             pointer.updatePosition(time, X_VELOCITY);
+
+            if (!pointer.isPassed() && pointer.getPipeRight() < bird.getOffSet()) {
+                pointer.setPassed(true);
+                score++;
+
+            }
 
             if (!pointer.getNextPipeCreated() && (int)pointer.getDistanceTraveled() > X_DIST_BETWEEN_PIPES) {
 
@@ -214,6 +229,7 @@ public class GameView extends View {
     }
 
     private void gameOver() {
+
         isPaused = true;
         showScoreDialog();
 
