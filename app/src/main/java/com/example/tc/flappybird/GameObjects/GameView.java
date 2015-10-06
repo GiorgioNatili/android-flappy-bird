@@ -62,7 +62,6 @@ public class GameView extends View {
         resetGameState();
     }
 
-    // called on initial startup
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
@@ -111,7 +110,6 @@ public class GameView extends View {
         }
         lastFrame = currentTime;
     }
-
 
     private void updatePipesOnScreen(float time) {
         for (int i = 0; i < pipePairsOnScreen.size(); i++) {
