@@ -34,8 +34,7 @@ public class PipePair {
 
         mPipeRight = INIT_X_POS + PIPE_WIDTH;
         mTopHitbox = new RectF(INIT_X_POS, 0, mPipeRight, mPipeHeight);
-        mBotHitbox = new RectF(INIT_X_POS, mPipeHeight + PIPE_OPENING_SIZE,
-                mPipeRight, screenHeight);
+        mBotHitbox = new RectF(INIT_X_POS, mPipeHeight + PIPE_OPENING_SIZE, mPipeRight, screenHeight);
 
     }
 
@@ -59,8 +58,7 @@ public class PipePair {
 
         mPipeRight = mXPos + PIPE_WIDTH;
         mTopHitbox.set(mXPos, 0, mPipeRight, mPipeHeight);
-        mBotHitbox.set(mXPos, mPipeHeight + PIPE_OPENING_SIZE,
-                mPipeRight, screenHeight);
+        mBotHitbox.set(mXPos, mPipeHeight + PIPE_OPENING_SIZE, mPipeRight, screenHeight);
 
     }
 
@@ -113,14 +111,20 @@ public class PipePair {
     }
 
     public float getPipeRight() {
+
         return this.mPipeRight;
+
     }
 
     public boolean isPassed() {
+
         return isPassed;
+
     }
 
     public void setPassed(boolean update) {
+
         this.isPassed = update;
+
     }
 }

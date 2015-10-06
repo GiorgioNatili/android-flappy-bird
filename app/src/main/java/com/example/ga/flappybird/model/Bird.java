@@ -41,8 +41,9 @@ public class Bird {
     public void updatePosition(float time, int gravity, int xVelocity) {
 
         x = x + xVelocity * time;
-        mVerticalVelocity = mVerticalVelocity + gravity * time;
         y = y + mVerticalVelocity * time;
+
+        mVerticalVelocity = mVerticalVelocity + gravity * time;
 
     }
 

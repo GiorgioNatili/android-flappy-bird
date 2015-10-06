@@ -31,7 +31,6 @@ public class GameView extends View {
     private final int PIPE_DEATH_POS = -100;
     private int pipeStartingPosition;
 
-
     private Paint paint;
     private Bitmap birdBitMap;
     private Bitmap backgroundBitMap;
@@ -120,8 +119,6 @@ public class GameView extends View {
 
         super.onDraw(canvas);
 
-
-
         drawBackground(canvas);
         bird.drawSelf(canvas, birdBitMap, paint);
         drawPipes(canvas);
@@ -186,6 +183,7 @@ public class GameView extends View {
             pointer.updatePosition(time, X_VELOCITY);
 
             if (!pointer.isPassed() && pointer.getPipeRight() < bird.getOffSet()) {
+
                 pointer.setPassed(true);
                 score++;
 
