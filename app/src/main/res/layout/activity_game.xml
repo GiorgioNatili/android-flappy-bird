@@ -4,9 +4,9 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.example.tc.flappytc.GameActivity">
+    tools:context="com.example.ga.flappybird.GameActivity">
 
-    <com.example.tc.flappybird.GameObjects.GameView
+    <com.example.ga.flappybird.views.GameView
         android:id="@+id/flappy_bird_gameview"
         android:layout_height="fill_parent"
         android:layout_width="fill_parent" />
