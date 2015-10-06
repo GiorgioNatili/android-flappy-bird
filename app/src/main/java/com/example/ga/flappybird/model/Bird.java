@@ -1,7 +1,6 @@
 package com.example.ga.flappybird.model;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
@@ -15,7 +14,7 @@ public class Bird {
 
     private float y;
     private float x;
-    private float verticalSpeed;
+    private float mVerticalSpeed;
 
     private RectF hitbox;
 
@@ -23,7 +22,7 @@ public class Bird {
     public Bird() {
 
         this.y = STARTING_HEIGHT;
-        this.verticalSpeed = 0;
+        this.mVerticalSpeed = 0;
 
     }
 
@@ -42,21 +41,21 @@ public class Bird {
     public void updatePosition(float time, int gravity, int xVelocity) {
 
         x = x + xVelocity * time;
-        verticalSpeed = verticalSpeed + gravity * time;
-        y = y + verticalSpeed * time;
+        mVerticalSpeed = mVerticalSpeed + gravity * time;
+        y = y + mVerticalSpeed * time;
 
     }
 
-    public void setYVelocity(float newVelocity) {
+    public void setVerticalSpeed(float newVelocity) {
 
-        this.verticalSpeed = newVelocity;
+        this.mVerticalSpeed = newVelocity;
 
     }
 
     public void resetState() {
 
         this.y = 100;
-        this.verticalSpeed = 0;
+        this.mVerticalSpeed = 0;
 
     }
 }
