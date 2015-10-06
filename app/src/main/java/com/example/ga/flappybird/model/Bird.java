@@ -14,7 +14,7 @@ public class Bird {
 
     private float y;
     private float x;
-    private float mVerticalSpeed;
+    private float mVerticalVelocity;
 
     private RectF hitbox;
 
@@ -22,7 +22,7 @@ public class Bird {
     public Bird() {
 
         this.y = STARTING_HEIGHT;
-        this.mVerticalSpeed = 0;
+        this.mVerticalVelocity = 0;
 
     }
 
@@ -41,21 +41,38 @@ public class Bird {
     public void updatePosition(float time, int gravity, int xVelocity) {
 
         x = x + xVelocity * time;
-        mVerticalSpeed = mVerticalSpeed + gravity * time;
-        y = y + mVerticalSpeed * time;
+        mVerticalVelocity = mVerticalVelocity + gravity * time;
+        y = y + mVerticalVelocity * time;
 
     }
 
     public void setVerticalSpeed(float newVelocity) {
 
-        this.mVerticalSpeed = newVelocity;
+        this.mVerticalVelocity = newVelocity;
 
     }
 
     public void resetState() {
 
         this.y = 100;
-        this.mVerticalSpeed = 0;
+        this.mVerticalVelocity = 0;
 
+    }
+
+    public RectF getHitbox() {
+
+        return this.hitbox;
+
+    }
+
+    public float getY() {
+
+        return this.y;
+
+    }
+
+    public int getOffSet() {
+
+        return this.OFFSET;
     }
 }

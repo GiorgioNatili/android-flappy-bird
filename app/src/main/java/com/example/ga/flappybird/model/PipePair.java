@@ -8,33 +8,42 @@ import android.graphics.RectF;
 // this object represents a top pipe and its complementary bottom pipe
 public class PipePair {
 
-    private final int WIDTH = 100;
-    private final int PIPE_OPENING_SIZE = 350;
+    private static final int PIPE_WIDTH = 100;
+    private static final int PIPE_OPENING_SIZE = 350;
     private final int INIT_X_POS;
 
-    private int pipeStartingPosition; // measured from the top, we randomize this for level design
+    private int mPipeHeight; // measured from the top, we randomize this for level design
+    private float mPipeRight;
     private float mXPos;
     private float mDistanceTraveled = 0;
     private boolean mNextPipeCreated = false;
+    private boolean isPassed = false;
 
-    public PipePair(int initalXPos, int initialY) {
+    private RectF mTopHitbox;
+    private RectF mBotHitbox;
 
-        this.INIT_X_POS = initalXPos;
+    private int screenHeight;
+
+
+    public PipePair(int initialX, int initialY, int screenHeight) {
+
+        this.INIT_X_POS = initialX;
         this.mXPos = INIT_X_POS;
-        this.pipeStartingPosition = initialY;
+        this.mPipeHeight = initialY;
+        this.screenHeight = screenHeight;
+
+        mPipeRight = INIT_X_POS + PIPE_WIDTH;
+        mTopHitbox = new RectF(INIT_X_POS, 0, mPipeRight, mPipeHeight);
+        mBotHitbox = new RectF(INIT_X_POS, mPipeHeight + PIPE_OPENING_SIZE,
+                mPipeRight, screenHeight);
 
     }
 
     public void drawSelf(Canvas canvas, Bitmap topBitmap,
-                         Bitmap bottomBitmap, int screenHeight, Paint paint) {
+                         Bitmap bottomBitmap, Paint paint) {
 
-        float pipeRight = mXPos + WIDTH;
-
-        RectF top       = new RectF(mXPos, 0, pipeRight, pipeStartingPosition);
-        RectF bottom    = new RectF(mXPos, pipeStartingPosition + PIPE_OPENING_SIZE, pipeRight, screenHeight);
-
-        canvas.drawBitmap(topBitmap, null, top, paint);
-        canvas.drawBitmap(bottomBitmap, null, bottom, paint);
+        canvas.drawBitmap(topBitmap, null, mTopHitbox, paint);
+        canvas.drawBitmap(bottomBitmap, null, mBotHitbox, paint);
 
     }
 
@@ -42,6 +51,16 @@ public class PipePair {
 
         mXPos = mXPos - xVelocity * time;
         mDistanceTraveled = Math.abs(mXPos - INIT_X_POS);
+        updateHitBoxes();
+
+    }
+
+    private void updateHitBoxes() {
+
+        mPipeRight = mXPos + PIPE_WIDTH;
+        mTopHitbox.set(mXPos, 0, mPipeRight, mPipeHeight);
+        mBotHitbox.set(mXPos, mPipeHeight + PIPE_OPENING_SIZE,
+                mPipeRight, screenHeight);
 
     }
 
@@ -67,5 +86,41 @@ public class PipePair {
 
         return this.mNextPipeCreated;
 
+    }
+
+    public static int getPipeWidth() {
+
+        return PIPE_WIDTH;
+
+    }
+
+    public static int getPipeOpeningSize() {
+
+        return PIPE_OPENING_SIZE;
+
+    }
+
+    public RectF getTopHitbox() {
+
+        return this.mTopHitbox;
+
+    }
+
+    public RectF getBotHitbox() {
+
+        return this.mBotHitbox;
+
+    }
+
+    public float getPipeRight() {
+        return this.mPipeRight;
+    }
+
+    public boolean isPassed() {
+        return isPassed;
+    }
+
+    public void setPassed(boolean update) {
+        this.isPassed = update;
     }
 }

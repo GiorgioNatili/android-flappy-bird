@@ -1,10 +1,13 @@
 package com.example.ga.flappybird.views;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.util.DisplayMetrics;
@@ -16,13 +19,14 @@ import com.example.ga.flappybird.model.Bird;
 import com.example.ga.flappybird.model.PipePair;
 
 import java.util.LinkedList;
+import java.util.Random;
 
 
 public class GameView extends View {
 
     private final int GRAVITY = 2000;
     private final int X_VELOCITY = 200;
-    private final int X_DIST_BETWEEN_PIPES = 500; // five pipe widths
+    private final int X_DIST_BETWEEN_PIPES = PipePair.getPipeWidth() * 5;
 
     private final int PIPE_DEATH_POS = -100;
     private int pipeStartingPosition;
@@ -36,14 +40,19 @@ public class GameView extends View {
 
     private Bird bird;
 
-    private LinkedList<PipePair> pipePairs;
+    private LinkedList<PipePair> pipePairsOnScreen;
 
-   private RectF backgroundRect;
+    private Random random;
+    private int upperBound;
+
+    private RectF backgroundRect;
 
     private int screenHeight;
     private int screenWidth;
 
     private long lastFrame = -1;
+
+    private boolean isPaused = false;
 
     private int score = 0;
 
@@ -56,6 +65,9 @@ public class GameView extends View {
 
         this.screenHeight = displaymetrics.heightPixels;
         this.screenWidth = displaymetrics.widthPixels;
+
+        random = new Random(System.currentTimeMillis());
+        upperBound = screenHeight - PipePair.getPipeOpeningSize();
 
         this.paint = new Paint();
         this.bird = new Bird();
@@ -95,10 +107,11 @@ public class GameView extends View {
         bird.resetState();
 
         pipeStartingPosition = (int)(screenWidth * 1.2);
-        pipePairs = new LinkedList<PipePair>();
+        pipePairsOnScreen = new LinkedList<PipePair>();
 
-        PipePair firstPipes = new PipePair(pipeStartingPosition, 200);
-        pipePairs.add(firstPipes);
+        int startingHeight = random.nextInt(upperBound);
+        PipePair firstPipes = new PipePair(pipeStartingPosition, startingHeight, screenHeight);
+        pipePairsOnScreen.add(firstPipes);
 
     }
 
@@ -107,11 +120,19 @@ public class GameView extends View {
 
         super.onDraw(canvas);
 
+
+
         drawBackground(canvas);
         bird.drawSelf(canvas, birdBitMap, paint);
-
         drawPipes(canvas);
-        updatePositions();
+        drawScore(canvas);
+
+        if (!isPaused) {
+
+            updatePositions();
+            checkCollisions();
+
+        }
 
         invalidate();
 
@@ -125,11 +146,19 @@ public class GameView extends View {
 
     private void drawPipes(Canvas canvas) {
 
-        for (PipePair pipePair : pipePairs) {
+        for (PipePair pipePair : pipePairsOnScreen) {
 
-            pipePair.drawSelf(canvas, topPipeBitMap, botPipeBitMap, screenHeight, paint);
+            pipePair.drawSelf(canvas, topPipeBitMap, botPipeBitMap, paint);
 
         }
+
+    }
+
+    private void drawScore(Canvas canvas) {
+
+        paint.setColor(Color.YELLOW);
+        paint.setTextSize(100);
+        canvas.drawText("" + score, 100, 100, paint);
 
     }
 
@@ -151,24 +180,81 @@ public class GameView extends View {
 
     private void updatePipesOnScreen(float time) {
 
-        for (int i = 0; i < pipePairs.size(); i++) {
+        for (int i = 0; i < pipePairsOnScreen.size(); i++) {
 
-            PipePair pointer = pipePairs.get(i);
+            PipePair pointer = pipePairsOnScreen.get(i);
             pointer.updatePosition(time, X_VELOCITY);
+
+            if (!pointer.isPassed() && pointer.getPipeRight() < bird.getOffSet()) {
+                pointer.setPassed(true);
+                score++;
+
+            }
 
             if (!pointer.getNextPipeCreated() && (int)pointer.getDistanceTraveled() > X_DIST_BETWEEN_PIPES) {
 
-                pipePairs.add(new PipePair(pipeStartingPosition, 200));
+                int randomHeight = random.nextInt(upperBound);
+                pipePairsOnScreen.add(new PipePair(pipeStartingPosition, randomHeight, screenHeight));
                 pointer.setNextPipeCreated(true);
 
             }
 
-            if (pipePairs.peek().getXPos() < PIPE_DEATH_POS) {
+            if (pipePairsOnScreen.peek().getXPos() < PIPE_DEATH_POS) {
 
-                pipePairs.remove();
+                pipePairsOnScreen.remove();
 
             }
         }
+    }
+
+    private void checkCollisions() {
+        if (bird.getY() > screenHeight || bird.getY() < 0) {
+
+            gameOver();
+
+        }
+        RectF birdHitBox = bird.getHitbox();
+        for (PipePair pipePair : pipePairsOnScreen) {
+
+            RectF topPipeHitbox = pipePair.getTopHitbox();
+            RectF botPipeHitbox = pipePair.getBotHitbox();
+
+            if (RectF.intersects(birdHitBox, topPipeHitbox) ||
+                    RectF.intersects(birdHitBox, botPipeHitbox)) {
+
+                gameOver();
+
+            }
+        }
+    }
+
+    private void gameOver() {
+
+        isPaused = true;
+        showScoreDialog();
+
+    }
+
+    private void showScoreDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+        builder.setMessage("Your score was: " + score).setTitle(
+                "Game over!");
+
+        builder.setPositiveButton("Play Again",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        isPaused = false;
+                        resetGameState();
+                        dialog.dismiss();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+
     }
 
     @Override
