@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -37,7 +38,7 @@ public class GameView extends View {
 
     private Bird bird;
 
-    private LinkedList<PipePair> pipePairs;
+    private LinkedList<PipePair> pipePairsOnScreen;
 
     private Random random;
     private int upperBound;
@@ -102,11 +103,11 @@ public class GameView extends View {
         bird.resetState();
 
         pipeStartingPosition = (int)(screenWidth * 1.2);
-        pipePairs = new LinkedList<PipePair>();
+        pipePairsOnScreen = new LinkedList<PipePair>();
 
         int startingHeight = random.nextInt(upperBound);
         PipePair firstPipes = new PipePair(pipeStartingPosition, startingHeight, screenHeight);
-        pipePairs.add(firstPipes);
+        pipePairsOnScreen.add(firstPipes);
 
     }
 
@@ -135,7 +136,7 @@ public class GameView extends View {
 
     private void drawPipes(Canvas canvas) {
 
-        for (PipePair pipePair : pipePairs) {
+        for (PipePair pipePair : pipePairsOnScreen) {
 
             pipePair.drawSelf(canvas, topPipeBitMap, botPipeBitMap, paint);
 
@@ -161,29 +162,51 @@ public class GameView extends View {
 
     private void updatePipesOnScreen(float time) {
 
-        for (int i = 0; i < pipePairs.size(); i++) {
+        for (int i = 0; i < pipePairsOnScreen.size(); i++) {
 
-            PipePair pointer = pipePairs.get(i);
+            PipePair pointer = pipePairsOnScreen.get(i);
             pointer.updatePosition(time, X_VELOCITY);
 
             if (!pointer.getNextPipeCreated() && (int)pointer.getDistanceTraveled() > X_DIST_BETWEEN_PIPES) {
 
                 int randomHeight = random.nextInt(upperBound);
-                pipePairs.add(new PipePair(pipeStartingPosition, randomHeight, screenHeight));
+                pipePairsOnScreen.add(new PipePair(pipeStartingPosition, randomHeight, screenHeight));
                 pointer.setNextPipeCreated(true);
 
             }
 
-            if (pipePairs.peek().getXPos() < PIPE_DEATH_POS) {
+            if (pipePairsOnScreen.peek().getXPos() < PIPE_DEATH_POS) {
 
-                pipePairs.remove();
+                pipePairsOnScreen.remove();
 
             }
         }
     }
 
     private void checkCollisions() {
+        if (bird.getY() > screenHeight || bird.getY() < 0) {
 
+            gameOver();
+
+        }
+        RectF birdHitBox = bird.getHitbox();
+        for (PipePair pipePair : pipePairsOnScreen) {
+
+            RectF topPipeHitbox = pipePair.getTopHitbox();
+            RectF botPipeHitbox = pipePair.getBotHitbox();
+
+            if (RectF.intersects(birdHitBox, topPipeHitbox) ||
+                    RectF.intersects(birdHitBox, botPipeHitbox)) {
+
+                gameOver();
+
+            }
+
+        }
+    }
+
+    private void gameOver() {
+        resetGameState();
     }
 
     @Override

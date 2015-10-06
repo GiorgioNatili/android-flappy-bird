@@ -60,6 +60,14 @@ public class Bird {
     }
 
     public RectF getHitbox() {
+
         return this.hitbox;
+
+    }
+
+    public float getY() {
+
+        return this.y;
+
     }
 }

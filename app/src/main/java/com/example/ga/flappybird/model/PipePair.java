@@ -53,10 +53,12 @@ public class PipePair {
     }
 
     private void updateHitBoxes() {
+
         float pipeRight = mXPos + PIPE_WIDTH;
         mTopHitbox.set(mXPos, 0, pipeRight, mPipeHeight);
         mBotHitbox.set(mXPos, mPipeHeight + PIPE_OPENING_SIZE,
                 pipeRight, screenHeight);
+
     }
 
     public float getXPos() {
@@ -84,10 +86,26 @@ public class PipePair {
     }
 
     public static int getPipeWidth() {
+
         return PIPE_WIDTH;
+
     }
 
     public static int getPipeOpeningSize() {
+
         return PIPE_OPENING_SIZE;
+
+    }
+
+    public RectF getTopHitbox() {
+
+        return this.mTopHitbox;
+
+    }
+
+    public RectF getBotHitbox() {
+
+        return this.mBotHitbox;
+
     }
 }
